@@ -389,111 +389,102 @@ const DAYS_DATA = [
   {short:'Mon',num:weekDates[0],full:'Monday',type:'Lower body strength',tag:'strength',duration:'~40 min',
     sections:[
       {label:'Strength',cls:'strength',exercises:[
-        {name:'Goblet squats',detail:'15 lb — 8 reps x 4 sets',log:true},
-        {name:'Dumbbell RDLs',detail:'10 lb — 8 reps x 3 sets (new!)',log:true},
-        {name:'Glute bridges',detail:'15 lb — 10 reps x 4 sets',log:true},
-        {name:'Reverse lunges',detail:'5 lb each — 8 each leg x 3 sets',log:true},
-        {name:'Calf raises',detail:'Bodyweight — 12 reps x 3 sets',log:false},
+        {name:'Goblet squats',detail:'17.5 lb — 8 reps x 4 sets (up from 15!)',log:true},
+        {name:'Dumbbell RDLs',detail:'7.5 lb each — 10 reps x 3 sets (add 2 reps)',log:true},
+        {name:'Glute bridges',detail:'20 lb — 10 reps x 4 sets (up from 17.5!)',log:true},
+        {name:'Curtsy lunges',detail:'5 lb each — 8 each leg x 3 sets (new variation)',log:true},
+        {name:'Calf raises',detail:'Bodyweight — 15 reps x 3 sets',log:false},
       ]},
       {label:'Posture',cls:'posture',exercises:[
-        {name:'Band pull-aparts',detail:'15 reps x 3 — Alena style: squeeze shoulder blades, hold 1 sec',log:false},
-        {name:'Thread the needle',detail:'Hold 30 sec each side — opens thoracic spine and shoulders',log:false},
+        {name:'Band pull-aparts',detail:'15 reps x 3 — narrow your grip slightly vs last week',log:false},
         {name:'Standing hamstring stretch',detail:'45 sec each side',log:false},
-        {name:'Inchworm',detail:'6 slow reps',log:false},
+        {name:'90/90 hip switches',detail:'8 slow each side — new hip mobility (Alena style)',log:false},
       ]},
     ],
-    note:'First week of RDLs — go light, focus on the hinge and feeling your hamstrings load. If it clicks, you\'re right on track for kettlebell deadlifts in a few weeks.'
+    note:'Goblet squats and glute bridges both move up — you earned it at RPE 5. RDLs stay light at 7.5 but add 2 reps to build the pattern. Curtsy lunges are new: step back and across, hits glutes from a fresh angle.'
   },
   {short:'Tue',num:weekDates[1],full:'Tuesday',type:'HIIT — Peloton',tag:'hiit',duration:'~30 min',
     sections:[
       {label:'HIIT',cls:'hiit',exercises:[
         {name:'Peloton intervals ride',detail:'20–25 min — any intervals or HIIT class',log:false},
-        {name:'Kettlebell swings',detail:'20 sec on / 40 sec rest x 4 rounds',log:true},
+        {name:'Kettlebell swings',detail:'20 sec on / 40 sec rest x 4 rounds (if you have gas left)',log:true},
       ]},
       {label:'Posture',cls:'posture',exercises:[
-        {name:'Scapular retractions',detail:'15 reps x 3',log:false},
-        {name:'Band lateral raise',detail:'12 reps x 3',log:false},
-        {name:'Figure-4 stretch',detail:'45 sec each side',log:false},
+        {name:'Prone Y-T-W raises',detail:'8 each letter — new postural strength (Alena style)',log:false},
+        {name:'Lying shoulder external rotation',detail:'15 reps x 3 each — light, elbow pinned',log:false},
       ]},
     ],
-    note:'Effort cap 7/10 on the bike. Keep it tight — daughter has practice.'
+    note:'Same structure as last week — swings are a bonus if you have energy after the ride, not a requirement. If you\'re spent after Peloton, the ride alone counts.'
   },
   {short:'Wed',num:weekDates[2],full:'Wednesday',type:'Upper body strength',tag:'strength',duration:'~40 min',
     sections:[
       {label:'Strength',cls:'strength',exercises:[
-        {name:'Dumbbell chest press',detail:'17.5 lb — 8 reps x 4 sets',log:true},
-        {name:'Bent-over rows',detail:'15 lb — 8 reps x 4 sets',log:true},
-        {name:'Shoulder press',detail:'7.5 lb — 8 reps x 3 sets',log:true},
-        {name:'Bicep curls',detail:'10 lb — 10 reps x 3 sets',log:true},
-        {name:'Tricep extensions',detail:'7.5 lb — 8 reps x 3 sets',log:true},
+        {name:'Dumbbell floor press',detail:'17.5 lb each — 8 reps x 4 sets (new: floor version)',log:true},
+        {name:'Single-arm rows',detail:'17.5 lb — 8 each arm x 3 sets (new variation, up from 15)',log:true},
+        {name:'Shoulder press',detail:'7.5 lb each — 8 reps x 3 sets (hold here, watch left shoulder)',log:true},
+        {name:'Bicep curls',detail:'10 lb each — 10 reps x 3 sets',log:true},
+        {name:'Tricep extensions',detail:'7.5 lb each — 10 reps x 3 sets (add 2 reps)',log:true},
       ]},
       {label:'Posture',cls:'posture',exercises:[
         {name:'Band face pulls',detail:'15 reps x 3 — elbows high, squeeze at end',log:false},
-        {name:'Lying shoulder external rotation',detail:'15 reps x 3 each side — elbow pinned to side, rotate forearm up',log:false},
-        {name:'Wall angels',detail:'10 reps x 3 — back flat against wall the whole time',log:false},
-        {name:'Baby cobra',detail:'Hold 5 sec x 8 reps — Alena style: gentle spinal extension, don\'t strain neck',log:false},
-        {name:'Thoracic extension over towel',detail:'2 min',log:false},
+        {name:'Wall angels',detail:'12 reps x 3 (up from 10 — Alena progression)',log:false},
+        {name:'Thread the needle',detail:'30 sec each side — thoracic rotation',log:false},
       ]},
     ],
-    note:'Tricep extensions bumped to 7.5 lb — try it and report back on the survey.'
+    note:'Two fresh movements this week: floor press (great for the shoulder — the floor limits how far you lower, protecting the joint) and single-arm rows (lets you focus each side evenly). Shoulder press holds steady on purpose.'
   },
   {short:'Thu',num:weekDates[3],full:'Thursday',type:'Rest day',tag:'rest',duration:'~10 min',
     sections:[
       {label:'Gentle mobility',cls:'rest',exercises:[
-        {name:'Chin tucks',detail:'10 reps x 2',log:false},
-        {name:'Neck side stretch',detail:'30 sec each side',log:false},
         {name:'Cat-cow',detail:'10 slow reps',log:false},
+        {name:'Supine open book',detail:'45 sec each side — spinal mobility',log:false},
         {name:'Supine hamstring stretch with band',detail:'45 sec each side',log:false},
       ]},
     ],
-    note:'Rest is part of the program. Daughter has practice — protect this day.'
+    note:'Rest is part of the program. Daughter has practice — protect this day. Just the gentle mobility, nothing more.'
   },
   {short:'Fri',num:weekDates[4],full:'Friday',type:'Full body strength',tag:'strength',duration:'~40 min',
     sections:[
       {label:'Strength — circuit',cls:'strength',exercises:[
-        {name:'Goblet squats',detail:'15 lb — 8 reps',log:true},
-        {name:'Chest press',detail:'17.5 lb — 8 reps',log:true},
-        {name:'Bent-over rows',detail:'15 lb — 8 reps',log:true},
-        {name:'Dumbbell RDLs',detail:'10 lb — 8 reps',log:true},
-        {name:'Reverse lunges',detail:'5 lb each — 8 each leg',log:true},
-        {name:'Shoulder press',detail:'7.5 lb — 8 reps',log:true},
+        {name:'Goblet squats',detail:'17.5 lb — 8 reps',log:true},
+        {name:'Floor press',detail:'17.5 lb each — 8 reps',log:true},
+        {name:'Single-arm rows',detail:'17.5 lb — 8 each arm',log:true},
+        {name:'Dumbbell RDLs',detail:'7.5 lb each — 10 reps',log:true},
+        {name:'Curtsy lunges',detail:'5 lb each — 8 each leg',log:true},
+        {name:'Shoulder press',detail:'7.5 lb each — 8 reps',log:true},
         {name:'Rest 2 min between rounds × 3',detail:'',log:false},
       ]},
       {label:'Posture',cls:'posture',exercises:[
-        {name:'Arm circles — Alena style',detail:'10 circles forward, 10 back — slow and controlled',log:false},
-        {name:'Scapular retractions',detail:'15 reps x 3 — squeeze and hold 2 sec each',log:false},
-        {name:'Seated forward fold',detail:'60 sec — relax into it, don\'t force',log:false},
-        {name:'Chin tucks',detail:'10 reps x 2 — gently draw head straight back',log:false},
+        {name:'Band pull-aparts',detail:'15 reps x 3',log:false},
+        {name:'Seated forward fold',detail:'60 sec — relax into it',log:false},
+        {name:'Chin tucks',detail:'10 reps x 2',log:false},
       ]},
     ],
-    note:'Home day — no rush. Circuit means exercises flow into the next, rest between full rounds only.'
+    note:'Home day — no rush. Circuit pulls together this week\'s new movements. Rest between full rounds only, not between exercises.'
   },
-  {short:'Sat',num:weekDates[5],full:'Saturday',type:'Active recovery',tag:'rest',duration:'~30 min',
+  {short:'Sat',num:weekDates[5],full:'Saturday',type:'Active recovery',tag:'rest',duration:'~20 min',
     sections:[
       {label:'Movement',cls:'hiit',exercises:[
-        {name:'Outdoor walk or light activity',detail:'25–30 min, conversational pace',log:false},
-        {name:'Game day?',detail:'Sideline energy counts — do mobility after',log:false},
-        {name:'Indoor backup',detail:'Easy Peloton, low resistance, 20 min',log:false},
+        {name:'Short walk or activity',detail:'15–20 min — you said Saturday is busy, keep it light',log:false},
+        {name:'Indoor backup',detail:'Easy Peloton 15 min if you can\'t get out',log:false},
       ]},
       {label:'Posture',cls:'posture',exercises:[
-        {name:'Chest opener',detail:'30 sec x 3',log:false},
-        {name:'Supine open book',detail:'45 sec each side',log:false},
-        {name:'Hip flexor + hamstring stretch',detail:'45 sec each side',log:false},
-        {name:'Wall angels',detail:'10 reps x 2',log:false},
+        {name:'Doorway chest stretch',detail:'30 sec x 2',log:false},
+        {name:'Figure-4 stretch',detail:'45 sec each side',log:false},
       ]},
     ],
-    note:'Recovery, not a workout. Move your body, enjoy your daughter\'s game, mobility when you get a moment.'
+    note:'You flagged Saturday as busy — so this is intentionally short. Even 15 minutes of movement and a quick stretch counts. Don\'t stress it.'
   },
   {short:'Sun',num:weekDates[6],full:'Sunday',type:'Yoga + reset',tag:'rest',duration:'~35 min',
     sections:[
       {label:'Yoga',cls:'posture',exercises:[
-        {name:'YouTube yoga — 30–45 min',detail:'Try: Yoga with Adriene "gentle recovery", "tight hips and shoulders", or Five Parks Yoga "beginners full body stretch"',log:false},
+        {name:'YouTube yoga — 30–45 min',detail:'Try: Yoga with Adriene "gentle recovery" or "tight hips and shoulders"',log:false},
       ]},
       {label:'Rest',cls:'rest',exercises:[
         {name:'Yoga covers posture today',detail:'No extra mobility needed',log:false},
       ]},
     ],
-    note:'Yoga replaces the posture block. Rest, reset, fill out your check-in when ready.'
+    note:'Yoga replaces the posture block. Rest, reset, and do your next check-in when ready.'
   },
 ];
 
