@@ -136,11 +136,6 @@ body{
 .switch-btn{width:100%;margin-bottom:12px;padding:18px;background:var(--mint);border:none;border-radius:14px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1.5px;cursor:pointer}
 .keep-btn{width:100%;margin-bottom:32px;padding:14px;background:transparent;border:1.5px solid #C9BFB3;border-radius:14px;color:var(--ink2);font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer}
 .plan-weeks-banner{background:var(--gold-bg);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--gold);font-weight:500}
-
-/* ── WEEK TOGGLE ── */
-.week-toggle{display:flex;gap:0;margin:12px 20px 0;background:var(--card2);border-radius:10px;padding:3px;flex-shrink:0}
-.week-toggle button{flex:1;padding:8px 0;border:none;background:transparent;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--ink3);cursor:pointer;transition:all .15s}
-.week-toggle button.active{background:var(--card);color:var(--coral);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
 </style>
 </head>
 <body>
@@ -157,10 +152,6 @@ body{
         <button class="checkin-trigger" onclick="showScreen('survey')">Check-in ↗</button>
         <button onclick="clearWeek()" style="background:none;border:none;font-size:11px;color:var(--ink3);cursor:pointer;font-family:'DM Sans',sans-serif;padding:0">Reset week</button>
       </div>
-    </div>
-    <div class="week-toggle" id="weekToggle">
-      <button id="toggleThis" class="active" onclick="setWeekView('this')">This Week</button>
-      <button id="toggleNext" onclick="setWeekView('next')">Next Week</button>
     </div>
     <div class="day-nav" id="dayNav"></div>
     <div class="scrollable">
@@ -354,36 +345,11 @@ OUTPUT FORMAT:
 Write the full 7-day plan. For each day: workout type, all exercises with sets/reps/weights, posture block with specific exercises, duration estimate, brief coach note. End with 4–6 "Notes for the Week" bullets: what's being progressed and why, what's new/different this week and why, what to watch, indoor backup for any outdoor movement. Tone: warm, direct, coach-like. Not clinical. Not cheerleader-y. Like a trainer who knows her well.`;
 
 // ── WORKOUT DATA ───────────────────────────────────────────────────────────────
-// Which week is being viewed: 'this' or 'next'
-let weekView = 'this';
-
-// Get the Monday of this week or next week
-function getMondayFor(view){
-  const today = new Date();
-  const day = today.getDay(); // 0=Sun, 1=Mon...
-  const monday = new Date(today);
-  monday.setDate(today.getDate() - (day === 0 ? 6 : day - 1));
-  if(view === 'next'){
-    monday.setDate(monday.getDate() + 7);
-  }
-  return monday;
-}
-
-// Calculate dates (Mon–Sun) for the given week view
-function getWeekDates(view){
-  const monday = getMondayFor(view || weekView);
-  return Array.from({length:7}, (_,i) => {
-    const d = new Date(monday);
-    d.setDate(monday.getDate() + i);
-    return d.getDate().toString();
-  });
-}
-let weekDates = getWeekDates('this');
-
-function getWeekLabel(view){
-  const monday = getMondayFor(view || weekView);
-  return monday.toLocaleDateString('en-US', {month:'long', day:'numeric'});
-}
+// ── THIS PLAN'S WEEK ──────────────────────────────────────────────────────────
+// These dates are set when Kelsey and Claude build each week's plan.
+// Week of July 6, 2026 (Mon–Sun): 6, 7, 8, 9, 10, 11, 12
+const weekDates = ['6','7','8','9','10','11','12'];
+const WEEK_LABEL = 'July 6';
 
 const DAYS_DATA = [
   {short:'Mon',num:weekDates[0],full:'Monday',type:'Lower body strength',tag:'strength',duration:'~40 min',
@@ -754,25 +720,6 @@ function countEx(i){
   return{total,done};
 }
 
-function setWeekView(view){
-  weekView = view;
-  weekDates = getWeekDates(view);
-  // Update the day numbers shown in each card
-  DAYS_DATA.forEach((d,i)=>{ d.num = weekDates[i]; });
-  // Update toggle button states
-  const tThis=document.getElementById('toggleThis');
-  const tNext=document.getElementById('toggleNext');
-  if(tThis&&tNext){
-    tThis.classList.toggle('active', view==='this');
-    tNext.classList.toggle('active', view==='next');
-  }
-  // Update the week label
-  const wsEl=document.getElementById('weekStart');
-  if(wsEl) wsEl.textContent = getWeekLabel(view);
-  renderNav();
-  renderContent();
-}
-
 function renderNav(){
   const nav=document.getElementById('dayNav');
   nav.innerHTML='';
@@ -862,11 +809,17 @@ window.saveLog=function(i,key){
   renderContent();
 };
 
-// Load saved plan if available, otherwise use default
-loadPlanFromStorage();
+// This plan comes straight from the file (updated via GitHub each week).
+// Clear any old plan that a previous in-app generation may have saved,
+// so the file is always the source of truth.
+try{ localStorage.removeItem('lw_plan'); localStorage.removeItem('lw_weekstart'); }catch(e){}
 
-// Default to showing "this week" on load
-setWeekView('this');
+// Set the week label in the header
+const wsEl = document.getElementById('weekStart');
+if(wsEl) wsEl.textContent = WEEK_LABEL;
+
+renderNav();
+renderContent();
 </script>
 </body>
 </html>
