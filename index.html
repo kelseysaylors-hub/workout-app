@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Let's Work">
+<title>Let's Work</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#F7F3EE;--card:#FFFFFF;--card2:#F0EBE3;
+  --coral:#E8364F;--gold:#D4820A;--gold-bg:#FFF3D6;
+  --mint:#0A9E76;--mint-bg:#D6F5EB;--purple:#6B3FA0;--purple-bg:#EDE5F9;
+  --ink:#1A1208;--ink2:#4A3F30;--ink3:#7A6E62;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  padding-top:var(--safe-top);
+  padding-bottom:var(--safe-bottom);
+}
+.app{
+  height:100vh;
+  height:100dvh;
+  display:flex;
+  flex-direction:column;
+  max-width:480px;
+  margin:0 auto;
+  background:var(--bg);
+}
+.screen{display:none;flex-direction:column;height:100%;overflow:hidden}
+.screen.active{display:flex}
+.scrollable{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;padding-bottom:24px}
+
+/* ── HEADER ── */
+.app-header{padding:20px 20px 0;display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0}
+.app-title{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--ink);letter-spacing:2px;line-height:1}
+.week-badge{background:var(--coral);color:#fff;font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;margin-top:6px;display:inline-block}
+.checkin-trigger{background:transparent;border:1.5px solid var(--coral);color:var(--coral);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* ── DAY NAV ── */
+.day-nav{display:flex;gap:6px;padding:14px 20px 0;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+.day-nav::-webkit-scrollbar{display:none}
+.day-pill{flex-shrink:0;width:46px;height:54px;border-radius:12px;border:1.5px solid #DDD5C8;background:var(--card);cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.day-pill .d{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ink);line-height:1}
+.day-pill .s{font-size:11px;color:var(--ink2)}
+.day-pill.active{background:var(--coral);border-color:var(--coral)}
+.day-pill.active .d,.day-pill.active .s{color:#1A1208}
+.day-pill.done{border-color:var(--mint);background:var(--mint-bg)}
+.day-pill.done .d,.day-pill.done .s{color:var(--mint)}
+
+/* ── DAY CONTENT ── */
+.day-content{padding:16px 20px}
+.progress-ring-wrap{display:flex;align-items:center;gap:16px;margin-bottom:18px;background:var(--card);border-radius:16px;padding:16px;border:1px solid #E8E0D5}
+.ring-container{position:relative;width:68px;height:68px;flex-shrink:0}
+.ring-container svg{transform:rotate(-90deg)}
+.ring-bg{stroke:#E8E0D5;fill:none;stroke-width:7}
+.ring-fill{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1)}
+.ring-pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ink)}
+.day-name{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--ink);line-height:1}
+.day-type{font-size:13px;color:var(--ink2);margin-top:3px}
+.day-duration{font-size:12px;color:var(--gold);font-weight:500;margin-top:4px}
+.section-label{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:20px;display:inline-block;margin:16px 0 10px}
+.sl-strength{background:#FDDDE2;color:var(--coral)}
+.sl-hiit{background:var(--gold-bg);color:var(--gold)}
+.sl-posture{background:var(--purple-bg);color:var(--purple)}
+.sl-rest{background:var(--mint-bg);color:var(--mint)}
+.exercise-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #EDE5DA;cursor:pointer}
+.exercise-row:last-child{border-bottom:none}
+.exercise-row.checked{opacity:.4}
+.check-box{width:26px;height:26px;border-radius:8px;border:1.5px solid #C9BFB3;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--card);transition:all .2s}
+.exercise-row.checked .check-box{background:var(--mint);border-color:var(--mint)}
+.check-icon{color:#fff;font-size:15px;display:none}
+.exercise-row.checked .check-icon{display:block}
+.ex-main{flex:1;min-width:0}
+.ex-name{font-size:15px;color:var(--ink);font-weight:400;line-height:1.3}
+.exercise-row.checked .ex-name{text-decoration:line-through;color:var(--ink3)}
+.ex-detail{font-size:12px;color:var(--ink2);margin-top:3px}
+.log-btn{font-size:12px;color:var(--gold);border:1.5px solid var(--gold);border-radius:20px;padding:5px 12px;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;font-weight:500}
+.log-input-row{display:flex;gap:8px;padding:8px 0 8px 38px;align-items:center}
+.log-input-row input{background:var(--card2);border:1px solid #C9BFB3;border-radius:8px;color:var(--ink);font-size:14px;padding:8px 12px;width:100%;font-family:'DM Sans',sans-serif}
+.log-input-row input::placeholder{color:var(--ink3)}
+.save-btn{background:var(--mint);border:none;color:#fff;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.logged-val{padding:4px 0 6px 38px;font-size:12px;color:var(--mint);font-weight:500}
+.notes-box{background:var(--purple-bg);border-radius:14px;padding:14px 16px;margin-top:18px}
+.notes-title{font-size:11px;font-weight:500;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.notes-text{font-size:13px;color:var(--ink2);line-height:1.7}
+
+/* ── SURVEY ── */
+.survey-header{padding:20px 20px 0;flex-shrink:0}
+.back-btn{background:none;border:none;color:var(--ink2);font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;margin-bottom:16px;display:flex;align-items:center;gap:4px}
+.survey-title{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--ink);letter-spacing:1px;margin-bottom:4px}
+.survey-sub{font-size:13px;color:var(--ink2);margin-bottom:0;padding-bottom:16px}
+.survey-body{padding:0 20px}
+.q-block{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid #E8E0D5}
+.q-label{font-size:11px;font-weight:500;color:var(--coral);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.q-text{font-size:14px;color:var(--ink);font-weight:500;margin-bottom:12px;line-height:1.4}
+.q-block textarea{width:100%;background:var(--card2);border:1px solid #C9BFB3;border-radius:8px;color:var(--ink);font-size:14px;padding:10px 12px;font-family:'DM Sans',sans-serif;resize:none;line-height:1.5}
+.q-block textarea::placeholder{color:var(--ink3)}
+.slider-row{display:flex;align-items:center;gap:12px}
+.slider-row input[type=range]{flex:1;accent-color:var(--coral);height:4px}
+.slider-val{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--coral);min-width:32px;text-align:center}
+.days-grid{display:flex;flex-wrap:wrap;gap:8px}
+.day-check{display:flex;align-items:center;gap:6px;background:var(--card2);border:1.5px solid #DDD5C8;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px;color:var(--ink2);transition:all .15s;user-select:none}
+.day-check.selected{background:#FDDDE2;border-color:var(--coral);color:var(--coral);font-weight:500}
+.generate-btn{width:100%;margin-top:4px;margin-bottom:32px;padding:18px;background:var(--coral);border:none;border-radius:14px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1.5px;cursor:pointer}
+.generate-btn:disabled{opacity:.5}
+
+/* ── GENERATING ── */
+.generating-screen-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:40px 20px;text-align:center}
+.gen-icon{font-size:52px;margin-bottom:20px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.gen-title{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--ink);letter-spacing:1px;margin-bottom:10px}
+.gen-sub{font-size:14px;color:var(--ink2);line-height:1.7;max-width:280px}
+
+/* ── PLAN ── */
+.plan-header{padding:20px 20px 0;flex-shrink:0}
+.plan-title{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--ink);letter-spacing:1px;margin-bottom:4px}
+.plan-sub{font-size:13px;color:var(--ink2);margin-bottom:0;padding-bottom:4px}
+.plan-body{padding:0 20px}
+.plan-day-card{background:var(--card);border:1px solid #E8E0D5;border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.plan-day-name{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ink);line-height:1}
+.plan-day-type{font-size:12px;color:var(--ink2);margin-top:2px;margin-bottom:8px}
+.plan-exercise{font-size:13px;color:var(--ink2);padding:3px 0;border-bottom:1px solid #F0EBE3;line-height:1.4}
+.plan-exercise:last-child{border-bottom:none}
+.plan-exercise strong{color:var(--ink);font-weight:500}
+.plan-note{font-size:12px;color:var(--purple);font-style:italic;margin-top:8px;line-height:1.5}
+.plan-section-tag{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:20px;display:inline-block;margin:8px 0 4px}
+.switch-btn{width:100%;margin-bottom:12px;padding:18px;background:var(--mint);border:none;border-radius:14px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1.5px;cursor:pointer}
+.keep-btn{width:100%;margin-bottom:32px;padding:14px;background:transparent;border:1.5px solid #C9BFB3;border-radius:14px;color:var(--ink2);font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer}
+.plan-weeks-banner{background:var(--gold-bg);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--gold);font-weight:500}
+
+/* ── WEEK TOGGLE ── */
+.week-toggle{display:flex;gap:0;margin:12px 20px 0;background:var(--card2);border-radius:10px;padding:3px;flex-shrink:0}
+.week-toggle button{flex:1;padding:8px 0;border:none;background:transparent;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--ink3);cursor:pointer;transition:all .15s}
+.week-toggle button.active{background:var(--card);color:var(--coral);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── WORKOUT SCREEN ── -->
+  <div class="screen active" id="screen-workout">
+    <div class="app-header">
+      <div>
+        <div class="app-title">Let's Work</div>
+        <span class="week-badge" id="weekBadge">Week of <span id="weekStart"></span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <button class="checkin-trigger" onclick="showScreen('survey')">Check-in ↗</button>
+        <button onclick="clearWeek()" style="background:none;border:none;font-size:11px;color:var(--ink3);cursor:pointer;font-family:'DM Sans',sans-serif;padding:0">Reset week</button>
+      </div>
+    </div>
+    <div class="week-toggle" id="weekToggle">
+      <button id="toggleThis" class="active" onclick="setWeekView('this')">This Week</button>
+      <button id="toggleNext" onclick="setWeekView('next')">Next Week</button>
+    </div>
+    <div class="day-nav" id="dayNav"></div>
+    <div class="scrollable">
+      <div class="day-content" id="dayContent"></div>
+    </div>
+  </div>
+
+  <!-- ── SURVEY SCREEN ── -->
+  <div class="screen" id="screen-survey">
+    <div class="survey-header">
+      <button class="back-btn" onclick="showScreen('workout')">← Back</button>
+      <div class="survey-title">Weekly Check-In</div>
+      <div class="survey-sub">Answer honestly — your next plan depends on it.</div>
+    </div>
+    <div class="scrollable">
+      <div class="survey-body">
+        <div class="q-block">
+          <div class="q-label">Question 1 of 6</div>
+          <div class="q-text">Which days did you complete this week?</div>
+          <div class="days-grid" id="daysGrid">
+            <div class="day-check" data-day="Monday" onclick="toggleDay(this)">Monday</div>
+            <div class="day-check" data-day="Tuesday" onclick="toggleDay(this)">Tuesday</div>
+            <div class="day-check" data-day="Wednesday" onclick="toggleDay(this)">Wednesday</div>
+            <div class="day-check" data-day="Thursday" onclick="toggleDay(this)">Thursday</div>
+            <div class="day-check" data-day="Friday" onclick="toggleDay(this)">Friday</div>
+            <div class="day-check" data-day="Saturday" onclick="toggleDay(this)">Saturday</div>
+            <div class="day-check" data-day="Sunday" onclick="toggleDay(this)">Sunday</div>
+          </div>
+        </div>
+        <div class="q-block">
+          <div class="q-label">Question 2 of 6</div>
+          <div class="q-text">How hard did workouts feel? (1 = easy, 10 = maxed out)</div>
+          <div class="slider-row">
+            <input type="range" min="1" max="10" value="7" id="rpeSlider" oninput="document.getElementById('rpeVal').textContent=this.value">
+            <div class="slider-val" id="rpeVal">7</div>
+          </div>
+        </div>
+        <div class="q-block">
+          <div class="q-label">Question 3 of 6</div>
+          <div class="q-text">Energy levels this week? (1 = depleted, 10 = great)</div>
+          <div class="slider-row">
+            <input type="range" min="1" max="10" value="7" id="energySlider" oninput="document.getElementById('energyVal').textContent=this.value">
+            <div class="slider-val" id="energyVal">7</div>
+          </div>
+        </div>
+        <div class="q-block">
+          <div class="q-label">Question 4 of 6</div>
+          <div class="q-text">Any pain, discomfort, or symptoms to flag?</div>
+          <textarea id="symptomsInput" rows="3" placeholder="e.g. Left shoulder felt tight Wednesday. Otherwise fine. Or: none."></textarea>
+        </div>
+        <div class="q-block">
+          <div class="q-label">Question 5 of 6</div>
+          <div class="q-text">What does next week's schedule look like?</div>
+          <textarea id="scheduleInput" rows="3" placeholder="e.g. Thursday is open this week. Saturday is a full-day tournament."></textarea>
+        </div>
+        <div class="q-block">
+          <div class="q-label">Question 6 of 6</div>
+          <div class="q-text">Any weights you went heavier or lighter on vs. what was prescribed?</div>
+          <textarea id="weightsInput" rows="3" placeholder="e.g. Bumped goblet squats to 17.5 lb Friday — felt strong. Stayed at 5 lb shoulder press."></textarea>
+        </div>
+        <button class="generate-btn" onclick="generatePlan()">Generate next week ↗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── GENERATING SCREEN ── -->
+  <div class="screen" id="screen-generating">
+    <div class="generating-screen-inner">
+      <div class="gen-icon">🏋️</div>
+      <div class="gen-title">Building your plan</div>
+      <div class="gen-sub" id="genSub">Reading your check-in and thinking through next week...</div>
+    </div>
+  </div>
+
+  <!-- ── PLAN SCREEN ── -->
+  <div class="screen" id="screen-plan">
+    <div class="plan-header">
+      <button class="back-btn" onclick="showScreen('workout')">← Back</button>
+      <div class="plan-title">Next Week's Plan</div>
+      <div class="plan-sub">Generated from your check-in</div>
+    </div>
+    <div class="scrollable">
+      <div class="plan-body">
+        <div class="plan-weeks-banner" id="planBanner"></div>
+        <div id="planContent"></div>
+        <button class="switch-btn" onclick="activateNextWeek()">Switch to this plan ↗</button>
+        <button class="keep-btn" onclick="showScreen('workout')">Keep current week for now</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── TRAINER BRAIN ──────────────────────────────────────────────────────────────
+const TRAINER_BRAIN = `You are Kelsey's personal AI fitness coach. Your job is to generate her weekly workout plan based on her weekly check-in survey. You know her history, her body, her goals, her equipment, and her schedule. You write plans that are specific, realistic, and build on where she actually is — not where a generic program thinks she should be.
+
+WHO KELSEY IS:
+Kelsey is a 37-year-old woman returning to consistent exercise after an extended medical recovery (ulcerative colitis-related hospitalization). She is not a beginner — she has a solid fitness foundation and has been following a structured recovery program — but she is rebuilding. She works from home on Mondays and Fridays, co-parents a daughter who has activities on Tuesdays and Thursdays, and has variable Saturday commitments (daughter's soccer/basketball games). Sleep is stable at 7–7.5 hours.
+
+Her primary goal is to get stronger and build real muscle — not bodybuilder-level mass, just genuine functional strength and a fit, healthy body. Losing a little weight is a secondary goal — welcome if it happens, but not the main driver. She is not trying to max out her cardio capacity or lose weight through cardio volume. Progressive strength is the priority.
+
+Critically, Kelsey has autoimmune disease (ulcerative colitis). All programming must be appropriate for someone managing an autoimmune condition. Recovery is non-negotiable, overtraining is a real risk, and rest days are as important as training days.
+
+EQUIPMENT: Dumbbells, resistance bands, kettlebell, Peloton bike (can do structured classes), walking pad (flat only — no incline). No barbell, cables, or gym machines.
+
+CURRENT BASELINE (Week 6):
+- Goblet squats: 15 lb
+- Reverse lunges: 5 lb each hand
+- Glute bridges: 15 lb
+- Calf raises: bodyweight
+- Dumbbell RDLs: 10 lb (newly introduced)
+- Chest press: 17.5 lb each hand
+- Bent-over rows: 15 lb each hand
+- Shoulder press: 7.5 lb each hand (LEFT SHOULDER IS SENSITIVE — progress conservatively, never aggressively)
+- Bicep curls: 10 lb each hand
+- Tricep extensions: 7.5 lb each hand
+
+SHOULDER SITUATION: Kelsey has an iffy left shoulder. Posture and mobility work is actively rehabilitative — not optional. If she reports shoulder discomfort, remove all overhead pressing and substitute horizontal band work only. Band pull-aparts, face pulls, and external rotation are the most important exercises in her program.
+
+HARD RULES — NEVER BREAK:
+1. No workouts over 40 minutes
+2. No running ever. Walking pad is flat only — no incline.
+3. No long moderate cardio
+4. Never two hard days in a row
+5. Posture/mobility every single day (10 min minimum on rest days)
+6. Outdoor walks always get an indoor backup option (easy Peloton, low resistance)
+7. HIIT effort capped at 7/10
+8. Only program equipment she owns
+9. High-impact moves (burpees, jump squats, box jumps) gated until 4 consecutive full-effort weeks
+
+SCHEDULE DEFAULTS: Mon/Fri = best days (WFH). Wed = third strength day. Tue = HIIT day. Thu = rest/light day (daughter's activities — both Tue and Thu still keep things light relative to strength days). Sat = variable (games — always offer under-20-min backup). Sun = yoga or rest. Never HIIT and strength on the same day.
+
+PROGRESSION PRIORITIES: Dumbbell RDLs → kettlebell deadlifts, push-up progression (wall → knee → full, gated by left shoulder), reverse lunges (currently light), goblet squats, chest press, rows. Conservative on shoulder press.
+
+POSTURE & MOBILITY — INSPIRED BY ALENA VI (@alena_backcare):
+Kelsey specifically wants her posture/mobility work to follow the approach of Alena Vi (Alena BackCare) — a Pilates, mobility, and posture-correction coach. Her method and philosophy to apply here:
+- Focus on rounded shoulders, hunched upper back, tech neck, and thoracic (mid-back) spine mobility — Kelsey's exact issues
+- Mostly simple, equipment-light movements that can be done standing or on a mat, anywhere
+- Roughly 70% postural STRENGTHENING (upper back, scapular, deep neck) + 30% spinal MOBILITY — not just passive stretching
+- Built-in progression: increase reps over time, or make a movement harder gradually (e.g. wall angels start easy and progress; band pull-aparts start wide and narrow the grip over weeks)
+- Short, repeatable doses done consistently (Alena often prescribes small sets morning and evening)
+- Emphasis on retraining movement patterns and building the habit, not one-off stretching
+
+POSTURE MENU — ROTATE FOR VARIETY, never repeat the same block two days in a row, and meaningfully change the posture mix week to week so it stays fresh:
+Postural STRENGTH (Alena-style, prioritize these — pick 2–3 per session): Band pull-aparts (progress grip narrower over weeks), wall angels (progress reps 10→15→20), scapular retractions with hold, prone Y-T-W raises, Alena-style band pull-downs (start hands wide, narrow over time), floor angels, superman holds, reverse flys
+Spinal MOBILITY (pick 1–2 per session): Cat-cow, thoracic extension over towel/foam roller, supine open book, thread the needle, seated spinal twist, baby cobra (slight arch, progress lower, hold 10 sec at end per Alena's cue), standing back extensions, segmental cat-cow from child's pose
+Neck / tech-neck (pick 1, most days): Chin tucks, neck side stretch, levator scapulae stretch, deep neck flexor holds
+Chest opening (pick 1, as needed): Doorway chest stretch, chest opener, clasped-hands behind-back stretch, arm circles (10 each direction, per Alena)
+Shoulder-specific rehab (2–3x/week, always on upper body + HIIT days): Lying shoulder external rotation (elbow pinned), band external rotation, band lateral raise — go light for the left shoulder
+Hamstring (3–4x/week — chronically tight): Standing hamstring stretch, lying hamstring stretch with band, seated forward fold, single-leg RDL stretch, supine hamstring walkouts, inchworm
+Hip mobility (as needed): Hip flexor stretch, figure-4 stretch, 90/90 hip switches, deep squat hold
+
+VARIETY RULE FOR POSTURE: Each new week, rotate in posture/mobility movements she hasn't done in the past week or two. Don't default to the same four every Monday. Keep her core needs covered (rounded shoulders, thoracic mobility, left shoulder, tight hamstrings) but vary the specific exercises so it feels like a fresh routine, exactly as Alena's programs rotate movements. When appropriate, note progression cues (more reps, narrower grip, deeper range, longer hold).
+
+HIIT OPTIONS — rotate week to week:
+- Peloton class (20–30 min intervals or HIIT ride — not endurance)
+- Bike intervals manual (5 min warmup → 30 sec hard / 90 sec easy x 6 rounds → cool down)
+- Kettlebell circuit (swings + goblet squats or rows, 3 rounds, 20 on/40 off)
+- Dumbbell HIIT circuit (3–4 exercises, 30 on/30 off, 3 rounds, no jumping)
+- Walking pad intervals (2 min brisk / 1 min easy x 8, flat only — good for low energy days)
+
+HOW TO READ THE SURVEY:
+Q1 (days completed): All 3 strength + HIIT → progress. 2 of 3 strength → maintain. 1 or fewer → reduce volume.
+Q2 (RPE): ≤6 → ready to progress. 7–8 → perfect, maintain. ≥9 → scale back.
+Q3 (energy): 7–10 → normal. 4–6 → hold progression. 1–3 → scale back; two weeks in a row → add rest day.
+Q4 (symptoms): Shoulder → no overhead, band only. GI symptoms → gentle movement week only. Soreness → normal, proceed.
+Q5 (schedule): Use this to assign workouts to the right days. Anchor hardest sessions on best days first.
+Q6 (weights): Update baseline from reported weights before generating next week.
+
+KEEPING IT FRESH — THREE PRIORITIES, EQUALLY IMPORTANT:
+This is critical. Kelsey does NOT want the same identical workout every week. Every generated week must deliver all three of these:
+
+1. PROGRESSIVE OVERLOAD — She should get measurably stronger over time. Based on her survey (RPE, reported weights), nudge weights up when she's ready, add a rep, add a set, or reduce rest. Reference her current baseline and build UP from it. Name specifically what changed from last week and why. Never let a week be a flat repeat of the numbers.
+
+2. EXERCISE VARIETY — Do NOT return the same five exercises for "lower body" every single week. Rotate within movement patterns so it stays interesting. Examples of swaps that hit the same muscles:
+   - Squat pattern: goblet squats ↔ sumo squats ↔ split squats ↔ Bulgarian split squats ↔ wall sits
+   - Hinge pattern: dumbbell RDLs ↔ kettlebell deadlifts ↔ single-leg RDLs ↔ good mornings ↔ glute bridges ↔ hip thrusts
+   - Push pattern: chest press ↔ floor press ↔ incline press ↔ push-up progression ↔ overhead press
+   - Pull pattern: bent-over rows ↔ single-arm rows ↔ renegade rows ↔ band pull-aparts ↔ reverse flys
+   - Lunge/unilateral: reverse lunges ↔ forward lunges ↔ lateral lunges ↔ step-ups ↔ curtsy lunges
+   Keep 1-2 anchor lifts consistent for progression tracking, but swap 2-3 accessory movements each week so it never feels stale. Respect all equipment and shoulder limits when swapping.
+
+3. ADAPT TO HER WEEK — The plan should visibly respond to her survey. Low energy → lighter, more recovery. Great week + low RPE → push harder, introduce something new. Shoulder flare → pivot away from overhead. Busy schedule → condense. She should feel like the plan actually listened to what she told you.
+
+Balance all three every week. A good week shows: an anchor lift progressing, a couple of fresh accessory movements she hasn't done recently, and clear responsiveness to how she said she felt.
+
+POSTURE VARIETY IS PART OF THIS TOO: Apply the same freshness rule to her posture/mobility blocks. Rotate the Alena-style postural strengthening and spinal mobility movements week to week — don't repeat the same posture routine. Keep her core needs covered (rounded shoulders, thoracic mobility, left shoulder rehab, tight hamstrings) but vary the specific exercises and note progression cues, exactly as Alena's programs evolve over their 6 weeks.
+
+OUTPUT FORMAT:
+Write the full 7-day plan. For each day: workout type, all exercises with sets/reps/weights, posture block with specific exercises, duration estimate, brief coach note. End with 4–6 "Notes for the Week" bullets: what's being progressed and why, what's new/different this week and why, what to watch, indoor backup for any outdoor movement. Tone: warm, direct, coach-like. Not clinical. Not cheerleader-y. Like a trainer who knows her well.`;
+
+// ── WORKOUT DATA ───────────────────────────────────────────────────────────────
+// Which week is being viewed: 'this' or 'next'
+let weekView = 'this';
+
+// Get the Monday of this week or next week
+function getMondayFor(view){
+  const today = new Date();
+  const day = today.getDay(); // 0=Sun, 1=Mon...
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (day === 0 ? 6 : day - 1));
+  if(view === 'next'){
+    monday.setDate(monday.getDate() + 7);
+  }
+  return monday;
+}
+
+// Calculate dates (Mon–Sun) for the given week view
+function getWeekDates(view){
+  const monday = getMondayFor(view || weekView);
+  return Array.from({length:7}, (_,i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    return d.getDate().toString();
+  });
+}
+let weekDates = getWeekDates('this');
+
+function getWeekLabel(view){
+  const monday = getMondayFor(view || weekView);
+  return monday.toLocaleDateString('en-US', {month:'long', day:'numeric'});
+}
+
+const DAYS_DATA = [
+  {short:'Mon',num:weekDates[0],full:'Monday',type:'Lower body strength',tag:'strength',duration:'~40 min',
+    sections:[
+      {label:'Strength',cls:'strength',exercises:[
+        {name:'Goblet squats',detail:'15 lb — 8 reps x 4 sets',log:true},
+        {name:'Dumbbell RDLs',detail:'10 lb — 8 reps x 3 sets (new!)',log:true},
+        {name:'Glute bridges',detail:'15 lb — 10 reps x 4 sets',log:true},
+        {name:'Reverse lunges',detail:'5 lb each — 8 each leg x 3 sets',log:true},
+        {name:'Calf raises',detail:'Bodyweight — 12 reps x 3 sets',log:false},
+      ]},
+      {label:'Posture',cls:'posture',exercises:[
+        {name:'Band pull-aparts',detail:'15 reps x 3 — Alena style: squeeze shoulder blades, hold 1 sec',log:false},
+        {name:'Thread the needle',detail:'Hold 30 sec each side — opens thoracic spine and shoulders',log:false},
+        {name:'Standing hamstring stretch',detail:'45 sec each side',log:false},
+        {name:'Inchworm',detail:'6 slow reps',log:false},
+      ]},
+    ],
+    note:'First week of RDLs — go light, focus on the hinge and feeling your hamstrings load. If it clicks, you\'re right on track for kettlebell deadlifts in a few weeks.'
+  },
+  {short:'Tue',num:weekDates[1],full:'Tuesday',type:'HIIT — Peloton',tag:'hiit',duration:'~30 min',
+    sections:[
+      {label:'HIIT',cls:'hiit',exercises:[
+        {name:'Peloton intervals ride',detail:'20–25 min — any intervals or HIIT class',log:false},
+        {name:'Kettlebell swings',detail:'20 sec on / 40 sec rest x 4 rounds',log:true},
+      ]},
+      {label:'Posture',cls:'posture',exercises:[
+        {name:'Scapular retractions',detail:'15 reps x 3',log:false},
+        {name:'Band lateral raise',detail:'12 reps x 3',log:false},
+        {name:'Figure-4 stretch',detail:'45 sec each side',log:false},
+      ]},
+    ],
+    note:'Effort cap 7/10 on the bike. Keep it tight — daughter has practice.'
+  },
+  {short:'Wed',num:weekDates[2],full:'Wednesday',type:'Upper body strength',tag:'strength',duration:'~40 min',
+    sections:[
+      {label:'Strength',cls:'strength',exercises:[
+        {name:'Dumbbell chest press',detail:'17.5 lb — 8 reps x 4 sets',log:true},
+        {name:'Bent-over rows',detail:'15 lb — 8 reps x 4 sets',log:true},
+        {name:'Shoulder press',detail:'7.5 lb — 8 reps x 3 sets',log:true},
+        {name:'Bicep curls',detail:'10 lb — 10 reps x 3 sets',log:true},
+        {name:'Tricep extensions',detail:'7.5 lb — 8 reps x 3 sets',log:true},
+      ]},
+      {label:'Posture',cls:'posture',exercises:[
+        {name:'Band face pulls',detail:'15 reps x 3 — elbows high, squeeze at end',log:false},
+        {name:'Lying shoulder external rotation',detail:'15 reps x 3 each side — elbow pinned to side, rotate forearm up',log:false},
+        {name:'Wall angels',detail:'10 reps x 3 — back flat against wall the whole time',log:false},
+        {name:'Baby cobra',detail:'Hold 5 sec x 8 reps — Alena style: gentle spinal extension, don\'t strain neck',log:false},
+        {name:'Thoracic extension over towel',detail:'2 min',log:false},
+      ]},
+    ],
+    note:'Tricep extensions bumped to 7.5 lb — try it and report back on the survey.'
+  },
+  {short:'Thu',num:weekDates[3],full:'Thursday',type:'Rest day',tag:'rest',duration:'~10 min',
+    sections:[
+      {label:'Gentle mobility',cls:'rest',exercises:[
+        {name:'Chin tucks',detail:'10 reps x 2',log:false},
+        {name:'Neck side stretch',detail:'30 sec each side',log:false},
+        {name:'Cat-cow',detail:'10 slow reps',log:false},
+        {name:'Supine hamstring stretch with band',detail:'45 sec each side',log:false},
+      ]},
+    ],
+    note:'Rest is part of the program. Daughter has practice — protect this day.'
+  },
+  {short:'Fri',num:weekDates[4],full:'Friday',type:'Full body strength',tag:'strength',duration:'~40 min',
+    sections:[
+      {label:'Strength — circuit',cls:'strength',exercises:[
+        {name:'Goblet squats',detail:'15 lb — 8 reps',log:true},
+        {name:'Chest press',detail:'17.5 lb — 8 reps',log:true},
+        {name:'Bent-over rows',detail:'15 lb — 8 reps',log:true},
+        {name:'Dumbbell RDLs',detail:'10 lb — 8 reps',log:true},
+        {name:'Reverse lunges',detail:'5 lb each — 8 each leg',log:true},
+        {name:'Shoulder press',detail:'7.5 lb — 8 reps',log:true},
+        {name:'Rest 2 min between rounds × 3',detail:'',log:false},
+      ]},
+      {label:'Posture',cls:'posture',exercises:[
+        {name:'Arm circles — Alena style',detail:'10 circles forward, 10 back — slow and controlled',log:false},
+        {name:'Scapular retractions',detail:'15 reps x 3 — squeeze and hold 2 sec each',log:false},
+        {name:'Seated forward fold',detail:'60 sec — relax into it, don\'t force',log:false},
+        {name:'Chin tucks',detail:'10 reps x 2 — gently draw head straight back',log:false},
+      ]},
+    ],
+    note:'Home day — no rush. Circuit means exercises flow into the next, rest between full rounds only.'
+  },
+  {short:'Sat',num:weekDates[5],full:'Saturday',type:'Active recovery',tag:'rest',duration:'~30 min',
+    sections:[
+      {label:'Movement',cls:'hiit',exercises:[
+        {name:'Outdoor walk or light activity',detail:'25–30 min, conversational pace',log:false},
+        {name:'Game day?',detail:'Sideline energy counts — do mobility after',log:false},
+        {name:'Indoor backup',detail:'Easy Peloton, low resistance, 20 min',log:false},
+      ]},
+      {label:'Posture',cls:'posture',exercises:[
+        {name:'Chest opener',detail:'30 sec x 3',log:false},
+        {name:'Supine open book',detail:'45 sec each side',log:false},
+        {name:'Hip flexor + hamstring stretch',detail:'45 sec each side',log:false},
+        {name:'Wall angels',detail:'10 reps x 2',log:false},
+      ]},
+    ],
+    note:'Recovery, not a workout. Move your body, enjoy your daughter\'s game, mobility when you get a moment.'
+  },
+  {short:'Sun',num:weekDates[6],full:'Sunday',type:'Yoga + reset',tag:'rest',duration:'~35 min',
+    sections:[
+      {label:'Yoga',cls:'posture',exercises:[
+        {name:'YouTube yoga — 30–45 min',detail:'Try: Yoga with Adriene "gentle recovery", "tight hips and shoulders", or Five Parks Yoga "beginners full body stretch"',log:false},
+      ]},
+      {label:'Rest',cls:'rest',exercises:[
+        {name:'Yoga covers posture today',detail:'No extra mobility needed',log:false},
+      ]},
+    ],
+    note:'Yoga replaces the posture block. Rest, reset, fill out your check-in when ready.'
+  },
+];
+
+const ringColors={strength:'#E8364F',hiit:'#D4820A',rest:'#0A9E76'};
+const clsMap={strength:'sl-strength',hiit:'sl-hiit',posture:'sl-posture',rest:'sl-rest'};
+const today=new Date().getDay();
+const dayMap=[6,0,1,2,3,4,5];
+let activeDay=dayMap[today]!==undefined?dayMap[today]:0;
+
+// ── PERSISTENT STORAGE ─────────────────────────────────────────────────────────
+function saveState(){try{localStorage.setItem('lw_state',JSON.stringify(state));}catch(e){}}
+function loadState(){
+  try{
+    const raw=localStorage.getItem('lw_state');
+    if(raw){const saved=JSON.parse(raw);Object.assign(state,saved);}
+  }catch(e){}
+}
+const state=DAYS_DATA.map(()=>({})); // initialize first
+loadState(); // then load saved data into it
+
+// ── PLAN STORAGE ──────────────────────────────────────────────────────────────
+function loadPlanFromStorage(){
+  try{
+    const saved=localStorage.getItem('lw_plan');
+    if(saved){
+      const plan=JSON.parse(saved);
+      if(Array.isArray(plan)&&plan.length===7){
+        DAYS_DATA.length=0;
+        plan.forEach(d=>DAYS_DATA.push(d));
+        return true;
+      }
+    }
+  }catch(e){}
+  return false;
+}
+
+// ── SCREEN CONTROL ─────────────────────────────────────────────────────────────
+function clearWeek(){
+  if(confirm('Reset all check-offs for this week?')){
+    state.forEach((s,i)=>{Object.keys(s).forEach(k=>delete s[i][k]);});
+    // re-init
+    DAYS_DATA.forEach((_,i)=>{Object.keys(state[i]).forEach(k=>delete state[i][k]);});
+    saveState();
+    renderNav();
+    renderContent();
+  }
+}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── SURVEY LOGIC ───────────────────────────────────────────────────────────────
+let selectedDays=new Set();
+window.toggleDay=function(el){
+  el.classList.toggle('selected');
+  const d=el.dataset.day;
+  if(el.classList.contains('selected'))selectedDays.add(d);
+  else selectedDays.delete(d);
+};
+
+// Stores the pending next week plan until user activates it
+let pendingPlan = null;
+
+window.generatePlan=async function(){
+  const rpe=document.getElementById('rpeSlider').value;
+  const energy=document.getElementById('energySlider').value;
+  const symptoms=document.getElementById('symptomsInput').value||'None reported';
+  const schedule=document.getElementById('scheduleInput').value||'No changes from usual';
+  const weights=document.getElementById('weightsInput').value||'No changes reported';
+  const days=[...selectedDays].join(', ')||'Not specified';
+
+  // Gather what she actually logged this week — real weights and completions
+  let loggedHistory='';
+  DAYS_DATA.forEach((d,i)=>{
+    const st=state[i]||{};
+    const dayLogs=[];
+    d.sections.forEach(sec=>{
+      sec.exercises.forEach((ex,ei)=>{
+        const key=sec.label+ei;
+        const logged=st[key+'_lv'];
+        const done=st[key+'_c'];
+        if(logged) dayLogs.push(`${ex.name}: logged "${logged}"`);
+        else if(done) dayLogs.push(`${ex.name}: completed as prescribed (${ex.detail})`);
+      });
+    });
+    if(dayLogs.length) loggedHistory+=`\n${d.full} (${d.type}): ${dayLogs.join('; ')}`;
+  });
+  if(!loggedHistory) loggedHistory=' No individual exercises were logged this week — use the summary answers above and the current baseline.';
+
+  const survey=`WEEKLY CHECK-IN:
+1. Days completed: ${days}
+2. How hard workouts felt (RPE 1-10): ${rpe}
+3. Energy levels (1-10): ${energy}
+4. Pain or symptoms: ${symptoms}
+5. Schedule next week: ${schedule}
+6. Weight changes from baseline: ${weights}
+
+WHAT SHE ACTUALLY DID THIS WEEK (logged in the app):${loggedHistory}
+
+Use the logged history above as the true record of where she is right now — build progression from these actual numbers, not the old baseline. Make next week genuinely different from what she just did: progress the anchor lifts, swap in fresh accessory movements, and respond to how she said the week felt.
+
+Respond ONLY with a JSON array of 7 day objects. No preamble, no markdown, no explanation. Just raw JSON.
+
+Each day object must have exactly these fields:
+{
+  "short": "Mon",
+  "full": "Monday",
+  "type": "Lower body strength",
+  "tag": "strength",
+  "duration": "~40 min",
+  "note": "Coach note here",
+  "sections": [
+    {
+      "label": "Strength",
+      "cls": "strength",
+      "exercises": [
+        { "name": "Goblet squats", "detail": "15 lb — 8 reps x 4 sets", "log": true }
+      ]
+    }
+  ]
+}
+
+tag must be one of: strength, hiit, rest
+cls must be one of: strength, hiit, posture, rest
+log must be true for weighted exercises, false for stretches/mobility
+Days must be in order: Monday through Sunday`;
+
+  showScreen('generating');
+
+  const msgs=[
+    'Reading your check-in...',
+    'Checking your progression...',
+    'Building posture and mobility blocks...',
+    'Putting it all together...'
+  ];
+  let mi=0;
+  const iv=setInterval(()=>{
+    mi=(mi+1)%msgs.length;
+    const el=document.getElementById('genSub');
+    if(el)el.textContent=msgs[mi];
+  },2500);
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:4000,
+        system:TRAINER_BRAIN,
+        messages:[{role:'user',content:survey}]
+      })
+    });
+    clearInterval(iv);
+    const data=await res.json();
+    const raw=data.content?.map(b=>b.text||'').join('')||'';
+    
+    let parsed=null;
+    try{
+      // Strip any accidental markdown fences
+      const clean=raw.replace(/```json|```/g,'').trim();
+      parsed=JSON.parse(clean);
+    }catch(e){
+      console.error('JSON parse failed:',e,raw.substring(0,200));
+    }
+
+    if(parsed && Array.isArray(parsed) && parsed.length===7){
+      pendingPlan=parsed;
+      renderPlanPreview(parsed);
+      showScreen('plan');
+    } else {
+      // Fallback: show raw text if JSON fails
+      document.getElementById('planBanner').textContent='';
+      document.getElementById('planContent').innerHTML=`<div style="font-size:14px;color:var(--ink2);line-height:1.8;white-space:pre-wrap;padding:4px 0">${raw||'Something went wrong — please try again.'}</div>`;
+      showScreen('plan');
+    }
+  }catch(err){
+    clearInterval(iv);
+    document.getElementById('planContent').innerHTML='<div style="color:var(--ink2);font-size:14px;padding:20px 0">Couldn\'t connect. Check your connection and try again.</div>';
+    showScreen('plan');
+  }
+};
+
+function renderPlanPreview(plan){
+  const banner=document.getElementById('planBanner');
+  banner.textContent='Your next week is ready — review it below, then switch when you\'re ready.';
+  
+  const clsTagMap={strength:'sl-strength',hiit:'sl-hiit',posture:'sl-posture',rest:'sl-rest'};
+  let html='';
+  plan.forEach(day=>{
+    html+=`<div class="plan-day-card">
+      <div class="plan-day-name">${day.full}</div>
+      <div class="plan-day-type">${day.type} · ${day.duration||''}</div>`;
+    (day.sections||[]).forEach(sec=>{
+      const tc=clsTagMap[sec.cls]||'sl-posture';
+      html+=`<div class="plan-section-tag ${tc}">${sec.label}</div>`;
+      (sec.exercises||[]).forEach(ex=>{
+        if(!ex.detail)return;
+        html+=`<div class="plan-exercise"><strong>${ex.name}</strong> — ${ex.detail}</div>`;
+      });
+    });
+    if(day.note){
+      html+=`<div class="plan-note">${day.note}</div>`;
+    }
+    html+=`</div>`;
+  });
+  document.getElementById('planContent').innerHTML=html;
+}
+
+window.activateNextWeek=function(){
+  if(!pendingPlan)return;
+  
+  // Calculate next week's dates
+  const today=new Date();
+  const day=today.getDay();
+  const nextMonday=new Date(today);
+  nextMonday.setDate(today.getDate()+(day===0?1:8-day));
+  const nextDates=Array.from({length:7},(_,i)=>{
+    const d=new Date(nextMonday);
+    d.setDate(nextMonday.getDate()+i);
+    return d.getDate().toString();
+  });
+
+  // Inject dates into the pending plan
+  const shorts=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  pendingPlan.forEach((day,i)=>{
+    day.num=nextDates[i];
+    day.short=shorts[i];
+  });
+
+  // Save to localStorage and update live data
+  try{
+    localStorage.setItem('lw_plan',JSON.stringify(pendingPlan));
+    localStorage.setItem('lw_weekstart', nextMonday.toLocaleDateString('en-US',{month:'long',day:'numeric'}));
+  }catch(e){}
+
+  // Update the active DAYS_DATA
+  loadPlanFromStorage();
+
+  // Reset check-off state for new week
+  state.length=0;
+  DAYS_DATA.forEach(()=>state.push({}));
+  saveState();
+
+  // Update week label
+  const wsEl=document.getElementById('weekStart');
+  if(wsEl){
+    const saved=localStorage.getItem('lw_weekstart');
+    if(saved)wsEl.textContent=saved;
+  }
+
+  activeDay=0;
+  renderNav();
+  renderContent();
+  showScreen('workout');
+  pendingPlan=null;
+};
+
+// ── WORKOUT RENDER ─────────────────────────────────────────────────────────────
+function countEx(i){
+  let total=0,done=0;
+  DAYS_DATA[i].sections.forEach(s=>s.exercises.forEach((e,ei)=>{
+    if(e.detail){total++;if(state[i][s.label+ei+'_c'])done++;}
+  }));
+  return{total,done};
+}
+
+function setWeekView(view){
+  weekView = view;
+  weekDates = getWeekDates(view);
+  // Update the day numbers shown in each card
+  DAYS_DATA.forEach((d,i)=>{ d.num = weekDates[i]; });
+  // Update toggle button states
+  const tThis=document.getElementById('toggleThis');
+  const tNext=document.getElementById('toggleNext');
+  if(tThis&&tNext){
+    tThis.classList.toggle('active', view==='this');
+    tNext.classList.toggle('active', view==='next');
+  }
+  // Update the week label
+  const wsEl=document.getElementById('weekStart');
+  if(wsEl) wsEl.textContent = getWeekLabel(view);
+  renderNav();
+  renderContent();
+}
+
+function renderNav(){
+  const nav=document.getElementById('dayNav');
+  nav.innerHTML='';
+  DAYS_DATA.forEach((d,i)=>{
+    const {total,done}=countEx(i);
+    const isDone=total>0&&done===total;
+    const btn=document.createElement('button');
+    btn.className='day-pill'+(i===activeDay?' active':isDone?' done':'');
+    btn.innerHTML=`<span class="d">${d.num}</span><span class="s">${d.short}</span>`;
+    btn.onclick=()=>{activeDay=i;renderContent();renderNav();};
+    nav.appendChild(btn);
+  });
+}
+
+function renderContent(){
+  const d=DAYS_DATA[activeDay];
+  const st=state[activeDay];
+  const {total,done}=countEx(activeDay);
+  const pct=total>0?Math.round(done/total*100):0;
+  const circ=2*Math.PI*30;
+  const offset=circ-(circ*pct/100);
+  const rc=ringColors[d.tag]||'#E8364F';
+
+  let html=`<div class="progress-ring-wrap">
+    <div class="ring-container">
+      <svg width="68" height="68" viewBox="0 0 68 68">
+        <circle class="ring-bg" cx="34" cy="34" r="28"/>
+        <circle class="ring-fill" cx="34" cy="34" r="28" stroke="${rc}" stroke-dasharray="${(2*Math.PI*28).toFixed(1)}" stroke-dashoffset="${((2*Math.PI*28)-(2*Math.PI*28)*pct/100).toFixed(1)}"/>
+      </svg>
+      <div class="ring-pct">${pct}%</div>
+    </div>
+    <div>
+      <div class="day-name">${d.full}</div>
+      <div class="day-type">${d.type}</div>
+      <div class="day-duration">${d.duration}</div>
+    </div>
+  </div>`;
+
+  d.sections.forEach(s2=>{
+    html+=`<div class="section-label ${clsMap[s2.cls]||'sl-posture'}">${s2.label}</div>`;
+    s2.exercises.forEach((e,ei)=>{
+      if(!e.detail&&!e.log){
+        html+=`<div class="exercise-row" style="cursor:default"><div class="ex-main"><div class="ex-name" style="color:var(--ink3)">${e.name}</div></div></div>`;
+        return;
+      }
+      const key=s2.label+ei;
+      const isChecked=!!st[key+'_c'];
+      const isLogOpen=!!st[key+'_lo'];
+      const logVal=st[key+'_lv']||'';
+      html+=`<div class="exercise-row${isChecked?' checked':''}" onclick="toggleCheck(${activeDay},'${key}')">
+        <div class="check-box"><span class="check-icon">✓</span></div>
+        <div class="ex-main">
+          <div class="ex-name">${e.name}</div>
+          ${e.detail?`<div class="ex-detail">${e.detail}</div>`:''}
+        </div>
+        ${e.log?`<button class="log-btn" onclick="event.stopPropagation();toggleLog(${activeDay},'${key}')">Log</button>`:''}
+      </div>`;
+      if(isLogOpen){
+        html+=`<div class="log-input-row">
+          <input type="text" placeholder="e.g. 17.5 lb, felt strong" value="${logVal}" id="inp-${key}">
+          <button class="save-btn" onclick="saveLog(${activeDay},'${key}')">Save</button>
+        </div>`;
+      }else if(logVal){
+        html+=`<div class="logged-val">✓ ${logVal}</div>`;
+      }
+    });
+  });
+
+  if(d.note){
+    html+=`<div class="notes-box"><div class="notes-title">Coach note</div><div class="notes-text">${d.note}</div></div>`;
+  }
+
+  document.getElementById('dayContent').innerHTML=html;
+}
+
+window.toggleCheck=function(i,key){
+  state[i][key+'_c']=!state[i][key+'_c'];
+  saveState();
+  renderContent();renderNav();
+};
+window.toggleLog=function(i,key){state[i][key+'_lo']=!state[i][key+'_lo'];renderContent();};
+window.saveLog=function(i,key){
+  const inp=document.getElementById('inp-'+key);
+  if(inp)state[i][key+'_lv']=inp.value;
+  state[i][key+'_lo']=false;
+  saveState();
+  renderContent();
+};
+
+// Load saved plan if available, otherwise use default
+loadPlanFromStorage();
+
+// Default to showing "this week" on load
+setWeekView('this');
+</script>
+</body>
+</html>
