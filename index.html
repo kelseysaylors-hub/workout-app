@@ -347,67 +347,65 @@ Write the full 7-day plan. For each day: workout type, all exercises with sets/r
 // ── WORKOUT DATA ───────────────────────────────────────────────────────────────
 // ── THIS PLAN'S WEEK ──────────────────────────────────────────────────────────
 // These dates are set when Kelsey and Claude build each week's plan.
-// Week of July 6, 2026 (Mon–Sun): 6, 7, 8, 9, 10, 11, 12
-const weekDates = ['6','7','8','9','10','11','12'];
-const WEEK_LABEL = 'July 6';
+// Week of July 13, 2026 (Mon–Sun): 13, 14, 15, 16, 17, 18, 19
+const weekDates = ['13','14','15','16','17','18','19'];
+const WEEK_LABEL = 'July 13';
 
 const DAYS_DATA = [
   {short:'Mon',num:weekDates[0],full:'Monday',type:'Lower body strength',tag:'strength',duration:'~40 min',
     sections:[
       {label:'Strength',cls:'strength',exercises:[
-        {name:'Goblet squats',detail:'17.5 lb — 8 reps x 4 sets (up from 15!)',log:true},
-        {name:'Dumbbell RDLs',detail:'7.5 lb each — 10 reps x 3 sets (add 2 reps)',log:true},
-        {name:'Glute bridges',detail:'20 lb — 10 reps x 4 sets (up from 17.5!)',log:true},
-        {name:'Curtsy lunges',detail:'5 lb each — 8 each leg x 3 sets (new variation)',log:true},
+        {name:'Goblet squats',detail:'17.5 lb — 8 reps x 4 sets',log:true},
+        {name:'Dumbbell RDLs',detail:'10 lb each — 8 reps x 3 sets (up from 7.5!)',log:true},
+        {name:'Glute bridges',detail:'20 lb — 10 reps x 4 sets',log:true},
+        {name:'Lateral lunges',detail:'5 lb each — 8 each side x 3 sets (new variation)',log:true},
         {name:'Calf raises',detail:'Bodyweight — 15 reps x 3 sets',log:false},
       ]},
       {label:'Posture',cls:'posture',exercises:[
-        {name:'Band pull-aparts',detail:'15 reps x 3 — narrow your grip slightly vs last week',log:false},
-        {name:'Standing hamstring stretch',detail:'45 sec each side',log:false},
-        {name:'90/90 hip switches',detail:'8 slow each side — new hip mobility (Alena style)',log:false},
+        {name:'Scapular retractions',detail:'15 reps x 3 — squeeze and hold 2 sec each',log:false},
+        {name:'Single-leg RDL stretch',detail:'8 slow reps each side — hamstring + balance',log:false},
+        {name:'Baby cobra',detail:'Hold 5 sec x 8 reps — gentle spinal extension',log:false},
       ]},
     ],
-    note:'Goblet squats and glute bridges both move up — you earned it at RPE 5. RDLs stay light at 7.5 but add 2 reps to build the pattern. Curtsy lunges are new: step back and across, hits glutes from a fresh angle.'
+    note:'RDLs move up to 10 lb — you\'re ready, the hinge pattern is solid. Lateral lunges are new: step out to the side instead of back, works your inner/outer thighs differently. Best day of the week for you, so this is your full session.'
   },
   {short:'Tue',num:weekDates[1],full:'Tuesday',type:'HIIT — Peloton',tag:'hiit',duration:'~30 min',
     sections:[
       {label:'HIIT',cls:'hiit',exercises:[
         {name:'Peloton intervals ride',detail:'20–25 min — any intervals or HIIT class',log:false},
-        {name:'Kettlebell swings',detail:'20 sec on / 40 sec rest x 4 rounds (if you have gas left)',log:true},
+        {name:'Kettlebell swings',detail:'20 sec on / 40 sec rest x 4 rounds (optional, if energy allows)',log:true},
       ]},
       {label:'Posture',cls:'posture',exercises:[
-        {name:'Prone Y-T-W raises',detail:'8 each letter — new postural strength (Alena style)',log:false},
-        {name:'Lying shoulder external rotation',detail:'15 reps x 3 each — light, elbow pinned',log:false},
+        {name:'Wall angels',detail:'8 reps x 3 (dialed back — tough last week, easing off)',log:false},
+        {name:'Band lateral raise',detail:'12 reps x 3 — light, rotator cuff strength',log:false},
       ]},
     ],
-    note:'Same structure as last week — swings are a bonus if you have energy after the ride, not a requirement. If you\'re spent after Peloton, the ride alone counts.'
+    note:'Wall angels dropped from 12 to 8 reps since they were tough last week — same movement, just less volume while you build the range of motion. Kettlebell swings totally optional if you\'re gassed after the ride, like last week.'
   },
-  {short:'Wed',num:weekDates[2],full:'Wednesday',type:'Upper body strength',tag:'strength',duration:'~40 min',
+  {short:'Wed',num:weekDates[2],full:'Wednesday',type:'Upper body strength (office day)',tag:'strength',duration:'~30 min',
     sections:[
-      {label:'Strength',cls:'strength',exercises:[
-        {name:'Dumbbell floor press',detail:'17.5 lb each — 8 reps x 4 sets (new: floor version)',log:true},
-        {name:'Single-arm rows',detail:'17.5 lb — 8 each arm x 3 sets (new variation, up from 15)',log:true},
-        {name:'Shoulder press',detail:'7.5 lb each — 8 reps x 3 sets (hold here, watch left shoulder)',log:true},
-        {name:'Bicep curls',detail:'10 lb each — 10 reps x 3 sets',log:true},
-        {name:'Tricep extensions',detail:'7.5 lb each — 10 reps x 3 sets (add 2 reps)',log:true},
+      {label:'Strength — condensed',cls:'strength',exercises:[
+        {name:'Dumbbell floor press',detail:'17.5 lb each — 8 reps x 3 sets (holding here, felt hard)',log:true},
+        {name:'Single-arm rows',detail:'17.5 lb — 8 each arm x 3 sets',log:true},
+        {name:'Shoulder press',detail:'7.5 lb each — 8 reps x 2 sets (trimmed for time)',log:true},
+        {name:'Tricep extensions',detail:'7.5 lb each — 8 reps x 3 sets (holding reps steady)',log:true},
       ]},
       {label:'Posture',cls:'posture',exercises:[
-        {name:'Band face pulls',detail:'15 reps x 3 — elbows high, squeeze at end',log:false},
-        {name:'Wall angels',detail:'12 reps x 3 (up from 10 — Alena progression)',log:false},
-        {name:'Thread the needle',detail:'30 sec each side — thoracic rotation',log:false},
+        {name:'Band face pulls',detail:'15 reps x 3',log:false},
+        {name:'Neck side stretch',detail:'30 sec each side',log:false},
       ]},
     ],
-    note:'Two fresh movements this week: floor press (great for the shoulder — the floor limits how far you lower, protecting the joint) and single-arm rows (lets you focus each side evenly). Shoulder press holds steady on purpose.'
+    note:'First office day — trimmed this session down (dropped bicep curls, cut shoulder press to 2 sets) so it fits before you need to leave. Floor press holds at 17.5 since it felt hard but doable; no rush to push it. Tricep reps hold at 8 since that\'s what you actually did last week.'
   },
   {short:'Thu',num:weekDates[3],full:'Thursday',type:'Rest day',tag:'rest',duration:'~10 min',
     sections:[
       {label:'Gentle mobility',cls:'rest',exercises:[
-        {name:'Cat-cow',detail:'10 slow reps',log:false},
-        {name:'Supine open book',detail:'45 sec each side — spinal mobility',log:false},
-        {name:'Supine hamstring stretch with band',detail:'45 sec each side',log:false},
+        {name:'Arm circles',detail:'10 forward, 10 back — slow and controlled',log:false},
+        {name:'Hip flexor stretch',detail:'45 sec each side',log:false},
+        {name:'Seated spinal twist',detail:'30 sec each side',log:false},
       ]},
     ],
-    note:'Rest is part of the program. Daughter has practice — protect this day. Just the gentle mobility, nothing more.'
+    note:'Aubrey has two practices today — full rest day, just the gentle mobility if you get a spare few minutes. Nothing more expected.'
   },
   {short:'Fri',num:weekDates[4],full:'Friday',type:'Full body strength',tag:'strength',duration:'~40 min',
     sections:[
@@ -415,31 +413,31 @@ const DAYS_DATA = [
         {name:'Goblet squats',detail:'17.5 lb — 8 reps',log:true},
         {name:'Floor press',detail:'17.5 lb each — 8 reps',log:true},
         {name:'Single-arm rows',detail:'17.5 lb — 8 each arm',log:true},
-        {name:'Dumbbell RDLs',detail:'7.5 lb each — 10 reps',log:true},
-        {name:'Curtsy lunges',detail:'5 lb each — 8 each leg',log:true},
+        {name:'Dumbbell RDLs',detail:'10 lb each — 8 reps',log:true},
+        {name:'Lateral lunges',detail:'5 lb each — 8 each side',log:true},
         {name:'Shoulder press',detail:'7.5 lb each — 8 reps',log:true},
         {name:'Rest 2 min between rounds × 3',detail:'',log:false},
       ]},
       {label:'Posture',cls:'posture',exercises:[
-        {name:'Band pull-aparts',detail:'15 reps x 3',log:false},
-        {name:'Seated forward fold',detail:'60 sec — relax into it',log:false},
-        {name:'Chin tucks',detail:'10 reps x 2',log:false},
+        {name:'Prone Y-T-W raises',detail:'8 each letter — postural strength',log:false},
+        {name:'Supine hamstring walkouts',detail:'10 reps each side',log:false},
+        {name:'Thoracic extension over towel',detail:'2 min',log:false},
       ]},
     ],
-    note:'Home day — no rush. Circuit pulls together this week\'s new movements. Rest between full rounds only, not between exercises.'
+    note:'Back to a full session — you\'re home and it\'s one of your best days. Full circuit brings together everything from the week.'
   },
   {short:'Sat',num:weekDates[5],full:'Saturday',type:'Active recovery',tag:'rest',duration:'~20 min',
     sections:[
       {label:'Movement',cls:'hiit',exercises:[
-        {name:'Short walk or activity',detail:'15–20 min — you said Saturday is busy, keep it light',log:false},
-        {name:'Indoor backup',detail:'Easy Peloton 15 min if you can\'t get out',log:false},
+        {name:'Walk or light activity',detail:'20 min — conversational pace',log:false},
+        {name:'Indoor backup',detail:'Easy Peloton, low resistance, 15 min',log:false},
       ]},
       {label:'Posture',cls:'posture',exercises:[
-        {name:'Doorway chest stretch',detail:'30 sec x 2',log:false},
-        {name:'Figure-4 stretch',detail:'45 sec each side',log:false},
+        {name:'Chest opener',detail:'30 sec x 3',log:false},
+        {name:'90/90 hip switches',detail:'8 slow each side',log:false},
       ]},
     ],
-    note:'You flagged Saturday as busy — so this is intentionally short. Even 15 minutes of movement and a quick stretch counts. Don\'t stress it.'
+    note:'Same light structure as last week — if mobility gets skipped again that\'s okay, the movement itself is the main thing here.'
   },
   {short:'Sun',num:weekDates[6],full:'Sunday',type:'Yoga + reset',tag:'rest',duration:'~35 min',
     sections:[
